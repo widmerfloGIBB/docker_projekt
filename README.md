@@ -1,30 +1,40 @@
 # Spring Boot + PostgreSQL Dockerized
 
-### Creating a docker network
-``` bash
-docker network create my_network
-``` 
 ### Postgresql docker setup
 ``` bash
-#Move to the position of the Dockerfile
-cd .\src\main\resources\persistence\
+#Docker-Compose
+docker-compose -f docker-compose.yml up -d
 
-#Build PostfresSQL image (From the position of the Dockerfile)
-docker build . -t postgres_db
+#Execute the Bash
+docker exec -it postgres bash 
 
-#Run Postgres container from image
-docker run --name my_database --network my_network postgres_db
+#Select the admin user
+psql -U admin
+
+#Create the deck database
+CREATE DATABASE deck;
+
+#Connect yourself with the Database
+\c deck
 ```
 
 ### Spring Boot docker setup
 ``` bash
-#Go back to the Spring Boot Dockerfile
-cd ../../../../
+#Open a new Terminal
 
 #Build Spring boot image (From the position of the Dockerfile)
 docker build . -t spring_boot_service
 
+#Create a docker network
+docker network create my_network
+
 #Run backend service and hos tit on localhost port 8080
 docker run -d -p 8080:8080 --name backend --network my_network spring_boot_service
+```
 
+### Test Daten einfügen
+``` bash
+#Run these Commands in the Terminal from 'Postgres docker Setup
+insert into card(id, definition, term) values (nextval('card_id_sequence'), 'hello', 'hallo');
+insert into card(id, definition, term) values (nextval('card_id_sequence'), 'bye', 'tschüss');
 ```
