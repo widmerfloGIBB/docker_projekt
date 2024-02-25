@@ -19,8 +19,7 @@ public class CardController {
 
     record NewCardRequest(
             String definition,
-            String term
-    ){
+            String term){
 
     }
 

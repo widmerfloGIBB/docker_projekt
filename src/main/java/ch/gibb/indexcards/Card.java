@@ -1,5 +1,6 @@
 package ch.gibb.indexcards;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -21,10 +22,16 @@ public class Card {
     private String definition;
     private String term;
 
-    public Card(Integer id, String definition, String term) {
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name="deck_id")
+    private Deck deck;
+
+    public Card(Integer id, String definition, String term, Deck deck) {
         this.id = id;
         this.definition = definition;
         this.term = term;
+        this.deck = deck;
     }
 
     public Card(){
@@ -55,17 +62,25 @@ public class Card {
         this.term = term;
     }
 
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public void setDeck(Deck deck) {
+        this.deck = deck;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Card card = (Card) o;
-        return Objects.equals(id, card.id) && Objects.equals(definition, card.definition) && Objects.equals(term, card.term);
+        return Objects.equals(id, card.id) && Objects.equals(definition, card.definition) && Objects.equals(term, card.term) && Objects.equals(deck, card.deck);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, definition, term);
+        return Objects.hash(id, definition, term, deck);
     }
 
     @Override
@@ -74,6 +89,7 @@ public class Card {
                 "id=" + id +
                 ", definition='" + definition + '\'' +
                 ", term='" + term + '\'' +
+                ", deck=" + deck +
                 '}';
     }
 }
